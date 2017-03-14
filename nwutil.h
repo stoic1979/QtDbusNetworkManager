@@ -15,6 +15,8 @@ public:
 
     void scanWifiAccessPoints();
 
+    void showAccessPointProperties(QString ap);
+
 signals:
 
 public slots:
