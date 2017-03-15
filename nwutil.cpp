@@ -57,6 +57,18 @@ void NwUtil::showAccessPointProperties(QString ap) {
 void NwUtil::scanWifiAccessPoints() {
     QStringList *netList = new QStringList();
 
+    //--------------------------------------------------------------------------------
+    //
+    // NOTE:
+    //
+    // On some systems, interface org.freedesktop.NetworkManager.Device.Wireless
+    // is under path /org/freedesktop/NetworkManager/Devices/0,
+    // in others, it may be in /org/freedesktop/NetworkManager/Devices/1
+    // or in /org/freedesktop/NetworkManager/Devices/2 etc
+    //
+    // Best way is to introspect and find the appropriate path for Wireless
+    //
+    //---------------------------------------------------------------------------------
     QDBusInterface dbus_iface("org.freedesktop.NetworkManager",                     // service
                               "/org/freedesktop/NetworkManager/Devices/0",          // path
                               "org.freedesktop.NetworkManager.Device.Wireless",     // interface
