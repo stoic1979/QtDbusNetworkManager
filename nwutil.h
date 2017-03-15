@@ -13,6 +13,8 @@ class NwUtil : public QObject
 public:
     explicit NwUtil(QObject *parent = 0);
 
+    void showAllDevices();
+
     void scanWifiAccessPoints();
 
     void showAccessPointProperties(QString ap);

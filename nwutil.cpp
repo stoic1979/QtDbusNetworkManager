@@ -5,6 +5,31 @@ QDBusConnection bus = QDBusConnection::systemBus();
 
 NwUtil::NwUtil(QObject *parent) : QObject(parent) {}
 
+
+void NwUtil::showAllDevices() {
+    QDBusInterface dbus_iface("org.freedesktop.NetworkManager",     // service
+                              "/org/freedesktop/NetworkManager",    // path
+                              "org.freedesktop.NetworkManager",     // interface
+                              bus);
+
+
+    QDBusMessage query = dbus_iface.call("GetAllDevices");
+
+    if(query.type() == QDBusMessage::ReplyMessage) {
+
+        QDBusArgument arg = query.arguments().at(0).value<QDBusArgument>();
+        arg.beginArray();
+        while(!arg.atEnd()) {
+            QString element = qdbus_cast<QString>(arg);
+            qDebug() << "Device: " << element;
+        }
+        arg.endArray();
+    } else {
+        qDebug() << "[scanWifiAccessPoints] got dbus error: " << query.errorName();
+        qDebug() << "[scanWifiAccessPoints] check the parameters like service, path, interface and method name !!!";
+    }
+}
+
 void NwUtil::showAccessPointProperties(QString ap) {
     qDebug() << "[AccessPoint] :: " << ap;
 
@@ -57,6 +82,7 @@ void NwUtil::showAccessPointProperties(QString ap) {
 void NwUtil::scanWifiAccessPoints() {
     QStringList *netList = new QStringList();
 
+    showAllDevices();
     //--------------------------------------------------------------------------------
     //
     // NOTE:
@@ -70,7 +96,7 @@ void NwUtil::scanWifiAccessPoints() {
     //
     //---------------------------------------------------------------------------------
     QDBusInterface dbus_iface("org.freedesktop.NetworkManager",                     // service
-                              "/org/freedesktop/NetworkManager/Devices/0",          // path
+                              "/org/freedesktop/NetworkManager/Devices/2",          // path
                               "org.freedesktop.NetworkManager.Device.Wireless",     // interface
                               bus);
 
