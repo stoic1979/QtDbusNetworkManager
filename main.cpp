@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     NwUtil nu;
     nu.showSavedConnections();
     nu.showAllDevices();
+    nu.showActiveConnections();
     nu.scanWifiAccessPoints();
 
     QQmlApplicationEngine engine;

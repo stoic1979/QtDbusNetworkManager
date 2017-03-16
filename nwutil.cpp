@@ -128,6 +128,7 @@ void NwUtil::showSavedConnections() {
 
 
     QDBusMessage query = dbus_iface.call("ListConnections");
+    qDebug() << " reading..." << query;
 
     if(query.type() == QDBusMessage::ReplyMessage) {
 
@@ -141,5 +142,43 @@ void NwUtil::showSavedConnections() {
     } else {
         qDebug() << "[showSavedConnections] got dbus error: " << query.errorName();
         qDebug() << "[showSavedConnections] check the parameters like service, path, interface and method name !!!";
+    }
+}
+
+void NwUtil::showActiveConnections() {
+
+    QDBusConnection bus = QDBusConnection::systemBus();
+
+    QDBusInterface dbus_iface("org.freedesktop.NetworkManager",      // service
+                              "/org/freedesktop/NetworkManager",     // path
+                              "org.freedesktop.DBus.Properties",     // interface
+                              bus);
+
+    QDBusMessage query =  dbus_iface.call("Get", "org.freedesktop.NetworkManager", "ActiveConnections");
+
+
+
+
+    if(query.type() == QDBusMessage::ReplyMessage) {
+
+        qDebug() << " query: " << query;
+        qDebug() << " args: " <<  query.arguments();
+        qDebug() << " args(0): " <<  query.arguments().at(0);
+        qDebug() << " signature: " << query.signature();
+        qDebug() << " query arg cnt: " << query.arguments().count();
+        qDebug() << " query arg str: " << query.arguments().at(0).toString();
+
+        QDBusArgument arg = query.arguments().at(0).value<QDBusArgument>();
+        arg.beginArray();
+        while(!arg.atEnd()) {
+            QString element = qdbus_cast<QString>(arg);
+            qDebug() << "Connection: " << element;
+        }
+        arg.endArray();
+
+
+    } else {
+        qDebug() << "[showActiveConnections] got dbus error: " << query.errorName();
+        qDebug() << "[showActiveConnections] check the parameters like service, path, interface and method name !!!";
     }
 }

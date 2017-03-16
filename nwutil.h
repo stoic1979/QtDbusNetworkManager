@@ -21,6 +21,8 @@ public:
 
     void showSavedConnections();
 
+    void showActiveConnections();
+
 signals:
 
 public slots:
