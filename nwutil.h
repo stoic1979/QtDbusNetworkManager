@@ -19,6 +19,8 @@ public:
 
     void showAccessPointProperties(QString ap);
 
+    void showSavedConnections();
+
 signals:
 
 public slots:

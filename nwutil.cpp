@@ -82,7 +82,6 @@ void NwUtil::showAccessPointProperties(QString ap) {
 void NwUtil::scanWifiAccessPoints() {
     QStringList *netList = new QStringList();
 
-    showAllDevices();
     //--------------------------------------------------------------------------------
     //
     // NOTE:
@@ -118,4 +117,29 @@ void NwUtil::scanWifiAccessPoints() {
         qDebug() << "[scanWifiAccessPoints] check the parameters like service, path, interface and method name !!!";
     }
 
+}
+
+
+void NwUtil::showSavedConnections() {
+    QDBusInterface dbus_iface("org.freedesktop.NetworkManager",              // service
+                              "/org/freedesktop/NetworkManager/Settings",    // path
+                              "org.freedesktop.NetworkManager.Settings",     // interface
+                              bus);
+
+
+    QDBusMessage query = dbus_iface.call("ListConnections");
+
+    if(query.type() == QDBusMessage::ReplyMessage) {
+
+        QDBusArgument arg = query.arguments().at(0).value<QDBusArgument>();
+        arg.beginArray();
+        while(!arg.atEnd()) {
+            QString element = qdbus_cast<QString>(arg);
+            qDebug() << "Connection: " << element;
+        }
+        arg.endArray();
+    } else {
+        qDebug() << "[showSavedConnections] got dbus error: " << query.errorName();
+        qDebug() << "[showSavedConnections] check the parameters like service, path, interface and method name !!!";
+    }
 }

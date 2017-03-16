@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     NwUtil nu;
+    nu.showSavedConnections();
+    nu.showAllDevices();
     nu.scanWifiAccessPoints();
 
     QQmlApplicationEngine engine;
